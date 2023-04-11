@@ -13,7 +13,7 @@ import {
 import Navbar from "../components/Navbar";
 import Background from "../components/Background";
 import WorkoutInfo from "../components/WorkoutInfo";
-import WorkoutTable from "../components/WorkoutTable";
+import WorkoutViewTable from "../components/WorkoutViewTable";
 import FeedbackBar from "../components/FeedbackBar";
 import SelfFeedbackBar from "../components/SelfFeedbackBar";
 // Context imports
@@ -78,18 +78,29 @@ export default function WorkoutView() {
                     Workout has been deleted! Redirecting...
                 </Alert>
             }
-            {ownsWorkout ? <SelfFeedbackBar workoutName={workout.workoutName} isPrivate={workout.isPrivate} wasDeleted={wasDeleted} setWasDeleted={setWasDeleted} /> : <FeedbackBar />}
-            <div id="workoutviewcontentdiv">
+            {
+                ownsWorkout
+                    ?
+                    <SelfFeedbackBar workoutName={workout.workoutName} workoutId={workout.workoutId} isPrivate={workout.isPrivate} isFavorite={workout.favorite} wasDeleted={wasDeleted} setWasDeleted={setWasDeleted} />
+                    :
+                    <FeedbackBar
+                    />}
+            <div id="viewdiv">
                 <style>
-                    {'#workoutviewcontentdiv { background-color:white; margin-top:1%; display:inline-block; width:90%; }'}
+                    {'#viewdiv { background-color:rgba(20,20,20,0.6); margin-top:1%; display:inline-block; width:90%; height:auto; min-height:100% }'}
                 </style>
-                <WorkoutInfo
-                    creator={workout.creator}
-                    workoutName={workout.workoutName}
-                    createdAt={workout.createdAt}
-                    isPrivate={workout.isPrivate}
-                />
-                <WorkoutTable exercises={workout.workoutExercises} onExerciseChange={handleExerciseChange} />
+                <div id="workoutviewcontentdiv">
+                    <style>
+                        {'#workoutviewcontentdiv { background-color:white; margin-top:1%; display:inline-block; width:90%; padding-bottom:1%"; margin-bottom:"1%";}'}
+                    </style>
+                    <WorkoutInfo
+                        creator={workout.creator}
+                        workoutName={workout.workoutName}
+                        createdAt={workout.createdAt}
+                        isPrivate={workout.isPrivate}
+                    />
+                    <WorkoutViewTable exercises={workout.workoutExercises} onExerciseChange={handleExerciseChange} />
+                </div>
             </div>
         </div>
     )

@@ -12,14 +12,9 @@ import {
     IconButton
 } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { HamburgerIcon, ExternalLinkIcon, DeleteIcon, StarIcon } from '@chakra-ui/icons';
+import { HamburgerIcon, ExternalLinkIcon, StarIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
-import { deleteWorkoutFromCollecton } from '../context/StoreContext';
 import { updateFavoriteWorkout, addFavoriteWorkoutToUserDocument, removeFavoriteWorkoutFromUserDocument } from '../context/StoreContext';
-
-var colors = ['red', 'green', 'blue', 'yellow', 'orange', 'pink'];
-var textColors = ['black', 'white', 'white', 'black', 'black', 'black'];
-var muscles = ["ARMS", "CHEST", "BACK", "LEGS", "SHOULDERS", "CARDIO"];
 
 function WorkoutWrapper({ children, wasDeleted }) {
     if (!wasDeleted) {
@@ -41,21 +36,11 @@ function WorkoutWrapper({ children, wasDeleted }) {
     }
 }
 
-export default function WorkoutCard({ user, workoutName, creator, isPrivate, workoutId, createdAt, isFavorite }) {
+export default function ExploreWorkoutCard({ user, workoutName, creator, isPrivate, workoutId, createdAt, isFavorite }) {
     // React State
-    const [wasDeleted, setWasDeleted] = useState(false);
     const [isFavorited, setIsFavorited] = useState(isFavorite);
     // Convert Date to String
     const date = createdAt.toDate().toDateString();
-    // Delete Workout
-    async function handleDeleteWorkout() {
-        try {
-            await deleteWorkoutFromCollecton(user, workoutName, isPrivate);
-            setWasDeleted(true);
-        } catch (error) {
-            console.log("Unable to delete workout: " + error);
-        }
-    }
 
     async function handleFavoriteWorkout() {
         try {
@@ -77,7 +62,7 @@ export default function WorkoutCard({ user, workoutName, creator, isPrivate, wor
     const workoutLink = `https://trainboard.vercel.app/workouts/${workoutId}`;
 
     return (
-        <WorkoutWrapper wasDeleted={wasDeleted}>
+        <WorkoutWrapper>
             <Box py={"4px"} >
                 <HStack justifyContent="center">
                     {isFavorited ?
@@ -101,9 +86,6 @@ export default function WorkoutCard({ user, workoutName, creator, isPrivate, wor
                             <MenuItem icon={<ExternalLinkIcon />} onClick={() => { navigator.clipboard.writeText(workoutLink) }}>
                                 Share Workout
                             </MenuItem>
-                            <MenuItem icon={<DeleteIcon />} onClick={handleDeleteWorkout}>
-                                Delete Workout
-                            </MenuItem>
                         </MenuList>
                     </Menu>
                 </HStack>
@@ -114,19 +96,8 @@ export default function WorkoutCard({ user, workoutName, creator, isPrivate, wor
                 bg={'white'}
                 py={1}
                 borderBottomRadius={'xl'}>
+                <p>@{creator}</p>
                 <p><b>Created:</b><br />{date} </p>
-
-                <HStack spacing={3} textAlign="center" px={12} pt={3} >
-                    {isPrivate ?
-                        <Tag size="md" variant='subtle' colorScheme='red'>
-                            Private
-                        </Tag>
-                        :
-                        <Tag size="md" variant='subtle' colorScheme='cyan'>
-                            Public
-                        </Tag>
-                    }
-                </HStack>
                 <Box w="80%" pt={3} pb={3}>
                     <Link to={`/workouts/${workoutId}`}>
                         <Button w="full" colorScheme="red" variant="outline">
